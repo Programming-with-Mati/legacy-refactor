@@ -5,10 +5,10 @@ import java.util.*;
 
 public class OrderService {
 
-  private final String jdbcUrl;
+  private final String connectionString;
 
-  public OrderService(String jdbcUrl) {
-    this.jdbcUrl = jdbcUrl;
+  public OrderService(String connectionString) {
+    this.connectionString = connectionString;
   }
 
   public Order dispatchOrder(Long orderId) {
@@ -83,6 +83,6 @@ public class OrderService {
       throw new RuntimeException(e);
     }
     return DriverManager
-            .getConnection(jdbcUrl, "root", "test");
+            .getConnection(connectionString, "root", "test");
   }
 }
