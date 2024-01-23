@@ -23,7 +23,8 @@ CREATE TABLE order_item (
 INSERT INTO `order` (payment, customer_email, state) VALUES
                                                          ('PAID', 'customer1@example.com', 'CREATED'),
                                                          ('PAID', 'customer2@example.com', 'DISPATCHED'),
-                                                         ('PAID', 'customer3@example.com', 'DELIVERED');
+                                                         ('PAID', 'customer3@example.com', 'DELIVERED'),
+                                                         ('PAYMENT_IN_PROGRESS', 'customer4@example.com', 'CREATED');
 
 -- Insert data into the 'item' table
 INSERT INTO item (stock) VALUES
@@ -36,4 +37,5 @@ INSERT INTO order_item (quantity, item_id, order_id) VALUES
                                                         (2, 1, 1),
                                                         (1, 2, 1),
                                                         (3, 3, 2),
-                                                        (2, 1, 3);
+                                                        (2, 1, 3),
+                                                        (2, 3, 4);
