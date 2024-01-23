@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -12,7 +11,6 @@ import org.testcontainers.utility.MountableFile;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +32,8 @@ class OrderServiceTest {
   }
 
   @Test
-  void testMySQL() {
-    orderService = new OrderService(mysql.getJdbcUrl());
+  void testDispatchOrder() {
+    orderService = new OrderService(new JdbcOrderRepository(mysql.getJdbcUrl()));
 
     var order = orderService.dispatchOrder(1L);
     assertEquals(OrderState.DISPATCHED, order.getState());
@@ -49,7 +47,20 @@ class OrderServiceTest {
     } catch (SQLException e) {
       fail();
     }
+  }
 
+  @Test
+  void testDispatchOrderWhenNotPaid() {
+    orderService = new OrderService(new JdbcOrderRepository(mysql.getJdbcUrl()));
+    var exception = assertThrows(RuntimeException.class, () -> orderService.dispatchOrder(4L));
+    assertTrue(exception.getMessage().contains("Not yet paid"));
+  }
+
+  @Test
+  void testDispatchOrderWhenNotFound() {
+    orderService = new OrderService(new JdbcOrderRepository(mysql.getJdbcUrl()));
+    var exception = assertThrows(RuntimeException.class, () -> orderService.dispatchOrder(5L));
+    assertTrue(exception.getMessage().contains("not found"));
   }
 
   private Connection createConnection() throws SQLException {

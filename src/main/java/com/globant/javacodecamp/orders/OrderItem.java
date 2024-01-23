@@ -11,7 +11,7 @@ public class OrderItem {
 
   private Long orderItemId;
   private Long orderId;
-  private Long itemId;
+  private Item item;
   private Integer quantity;
 
 }
